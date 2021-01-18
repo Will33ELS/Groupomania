@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 
 const authRoute = require("./routes/auth");
+const profileRoute = require("./routes/profile");
 
 // CORS
 app.use((req, res, next) => {
@@ -21,5 +22,8 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 
 //Routes d'authentification
 app.use("/auth", authRoute);
+
+//Routes de profile
+app.use("/profile", profileRoute);
 
 module.exports = app;

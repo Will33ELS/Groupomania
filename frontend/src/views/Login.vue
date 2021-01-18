@@ -37,7 +37,7 @@ export default {
           email: this.email,
           password: this.password
         }).then((response) => {
-          this.$router.push("/");
+          window.location = "/";
           this.$store.dispatch("authLogin", response.data.token);
           this.$store.dispatch("sendSuccess", "Vous êtes connecté !");
           vm.$forceUpdate();

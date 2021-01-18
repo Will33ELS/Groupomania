@@ -20,7 +20,7 @@
       <!-- Utilisateur connecté -->
       <div class="col text-center" v-if="$store.state.token != null">
         <div class="nav-item d-inline">
-          <router-link to="/login">Mon profil</router-link>
+          <router-link to="/myprofile">Mon profil</router-link>
         </div>
         <div class="nav-item d-inline">
           <a href="#" @click="logout">Déconnexion</a>
@@ -36,7 +36,7 @@ export default {
   methods: {
     logout: function (event) {
       this.$store.dispatch("authLogout");
-      this.$router.push("/login");
+      window.location = "/login";
       event.preventDefault();
     }
   }

@@ -20,16 +20,17 @@ export default new Vuex.Store({
   actions: {
     authLogout: () => {
       localStorage.removeItem("user-token") // clear your user's token from localstorage
-      this.$forceUpdate();
     },
     authLogin: (context, token) => {
       localStorage.setItem("user-token", token);
     },
     sendError: (context, error) => {
       context.commit("CHANGE_ERROR", error);
+      context.commit("CHANGE_SUCCESS", null);
     },
     sendSuccess: (context, success) => {
       context.commit("CHANGE_SUCCESS", success);
+      context.commit("CHANGE_ERROR", null);
     },
     dismissAlert: (context, type) => {
       if(type === "danger")

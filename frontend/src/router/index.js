@@ -5,6 +5,7 @@ import store from '../store' // VueX
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
+import MyProfile from '../views/MyProfile.vue'
 
 Vue.use(VueRouter)
 
@@ -17,13 +18,13 @@ const ifNotAuthenticated = (to, from, next) => { // L'utilisateur ne doit pas ê
   next('/')
 }
 
-/*const ifAuthenticated = (to, from, next) => { // L'utilisateur doit être connecté
-  if (store.getters.isAuthenticated) {
+const ifAuthenticated = (to, from, next) => { // L'utilisateur doit être connecté
+  if (store.state.token != null) {
     next()
     return
   }
   next('/login')
-}*/
+}
 
 const routes = [
   {
@@ -42,6 +43,12 @@ const routes = [
     name: 'Register',
     component: Register,
     beforeEnter: ifNotAuthenticated,
+  },
+  {
+    path: '/myprofile',
+    name: 'MyProfile',
+    component: MyProfile,
+    beforeEnter: ifAuthenticated,
   },
 ]
 

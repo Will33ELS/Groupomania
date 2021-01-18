@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
+const userUtil = require("../utils/userUtils");
 
 //CREATION DE L'UTILISATEUR
 exports.signup = (req, res, next) => {
@@ -50,7 +51,7 @@ exports.signin = (req, res, next) => {
 //CHANGEMENT DU MOT DE PASSE
 exports.password = (req, res, next) => {
     User.findOne({
-        id: req.body.userId
+        id: userUtil.getUserID()
     }).then(user => {
         bcrypt.compare(req.body.password, user.password)
             .then(valid => {
@@ -77,10 +78,23 @@ exports.password = (req, res, next) => {
 //SUPPRESSION DU COMPTE
 exports.unregister = (req, res, next) => {
     User.findOne({ //Recherche de l'utilisateur
-        id: req.body.userId
+        id: userUtil.getUserID(req)
     }).then(user => {
-        //Suppression du compte
-        user.destroy().then(() => res.status(200).json({ message: "Compte supprimé avec succés !" }))
-            .catch(error => res.status(500).json({ error }));
+        //COMPARAISON DES MOTS DE PASSE
+        bcrypt.compare(req.body.password, user.password)
+            .then(valid => {
+                if(!valid) // Vérification du mot de passe actuel
+                    return res.status(401).send("Le mot de passe saisie est incorrect.");
+                else{
+                    //Suppression du compte
+                    user.destroy().then(() => res.status(200).json({ message: "Compte supprimé avec succés !" }))
+                        .catch(error => res.status(500).json({ error }));
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                res.status(500).json({ error })
+            });
+
     }).catch(error => res.status(500).json({ error }));
 }
