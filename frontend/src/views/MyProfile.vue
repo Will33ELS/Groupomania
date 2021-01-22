@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h1>Mon profile</h1>
     <div class="my-4 row justify-content-around">
       <div class="col-12 col-md-4">

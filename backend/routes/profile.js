@@ -6,7 +6,7 @@ const authMiddleware = require("../middleware/auth");
 
 const profileController = require("../controller/profile");
 
-router.get("/", authMiddleware, profileController.myProfile); //Route pour récupérer les informations du comptes
-router.post("/avatar", authMiddleware, multerMiddleware, profileController.changeAvatar); //Route pour changer d'avatar
+router.get("/", authMiddleware.logged, profileController.myProfile); //Route pour récupérer les informations du comptes
+router.post("/avatar", authMiddleware.logged, multerMiddleware, profileController.changeAvatar); //Route pour changer d'avatar
 
 module.exports = router;

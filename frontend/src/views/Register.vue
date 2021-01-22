@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h1>Inscription</h1>
     <form @submit="signup" class="my-4 row justify-content-center" method="post">
       <div class="col-10 col-md-8">

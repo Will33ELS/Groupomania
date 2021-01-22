@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h1>Connexion</h1>
     <form class="my-4 row justify-content-center" @submit="login" method="post">
       <div class="col-10 col-md-8">

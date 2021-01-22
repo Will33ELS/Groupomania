@@ -5,6 +5,7 @@ const path = require("path");
 
 const authRoute = require("./routes/auth");
 const profileRoute = require("./routes/profile");
+const publicationsRoute = require("./routes/publications");
 
 // CORS
 app.use((req, res, next) => {
@@ -25,5 +26,8 @@ app.use("/auth", authRoute);
 
 //Routes de profile
 app.use("/profile", profileRoute);
+
+//Routes des publications
+app.use("/publications", publicationsRoute);
 
 module.exports = app;
