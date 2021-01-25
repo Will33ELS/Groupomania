@@ -30,7 +30,7 @@
       <hr/>
       <div class="publication-footer d-inline-flex">
         <div class="publication-footer-item mx-3">
-          <a id="like-button" @click="likePost" href="#">
+          <a :id="'like-button-'+id" @click="likePost" href="#">
             <i class="fas fa-heart"></i> J'aime ({{ this.likes.length }})
           </a>
         </div>
@@ -86,10 +86,10 @@ export default {
             this.$store.dispatch("sendSuccess", response.data.message);
             if(response.data.like == 0) {
               this.likes = this.likes.filter(user => user !== this.$store.state.userId)
-              document.getElementById("like-button").classList.remove("active");
+              document.getElementById("like-button-"+this.id).classList.remove("active");
             } else {
               this.likes.push(this.$store.state.userId);
-              document.getElementById("like-button").classList.add("active");
+              document.getElementById("like-button-"+this.id).classList.add("active");
             }
             this.$forceUpdate();
           }).catch(error => this.$store.dispatch("sendError", error));
@@ -101,8 +101,8 @@ export default {
       data.forEach(like => {
         this.likes.push(like.user_id);
       });
-      if(this.likes.includes(this.$store.state.userId)){
-        document.getElementById("like-button").classList.add("active");
+      if(this.likes.length !== 0 && this.likes.includes(this.$store.state.userId)){
+        document.getElementById("like-button-"+this.id).classList.add("active");
       }
     }).catch(error => this.$store.dispatch("sendError", error.response.data));
   }
