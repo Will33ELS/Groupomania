@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 //Vérification de l'authentification
 exports.logged = (req, res, next) => {
+    console.log(req.headers.authorization);
     try {
         const token = req.headers.authorization;
         const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
@@ -14,7 +15,7 @@ exports.logged = (req, res, next) => {
         } else {
             next();
         }
-    } catch {
+    } catch (e){
         res.status(401).json({
             error: new Error('Invalid request!')
         });

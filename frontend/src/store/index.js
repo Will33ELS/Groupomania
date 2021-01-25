@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: localStorage.getItem('user-token') || null,
+    token: localStorage.getItem("user-token"),
+    userId: Number(localStorage.getItem("user-id")),
     error: null,
     success: null,
   },
@@ -16,13 +17,21 @@ export default new Vuex.Store({
     CHANGE_SUCCESS(state, success){
       state.success = success;
     },
+    AUTH_SUCCESS(state, token, userId){
+      state.token = token
+      state.userId = userId
+    },
   },
   actions: {
-    authLogout: () => {
-      localStorage.removeItem("user-token") // clear your user's token from localstorage
+    authLogout: (context) => {
+      localStorage.removeItem("user-id"); // Suppression de l'userID dans le stockage
+      localStorage.removeItem("user-token") // Suppression du token dans le stockage
+      context.commit('AUTH_SUCCESS', null, null);
     },
-    authLogin: (context, token) => {
-      localStorage.setItem("user-token", token);
+    authLogin: ({commit}, user) => {
+      localStorage.setItem("user-id", user.userId);
+      localStorage.setItem("user-token", user.token);
+      commit('AUTH_SUCCESS', user.token, user.userId);
     },
     sendError: (context, error) => {
       context.commit("CHANGE_ERROR", error);

@@ -32,15 +32,16 @@ export default {
       if(!this.email || !this.password){
         this.$store.dispatch("sendError", "Tous les champs sont requis.");
       }else{
-        const vm = this;
         axios.post("http://localhost:3000/auth/login", {
           email: this.email,
           password: this.password
         }).then((response) => {
           window.location = "/";
-          this.$store.dispatch("authLogin", response.data.token);
+          this.$store.dispatch("authLogin", {
+            userId: response.data.userId,
+            token: response.data.token
+          });
           this.$store.dispatch("sendSuccess", "Vous êtes connecté !");
-          vm.$forceUpdate();
         }).catch(error => {
             this.$store.dispatch("sendError", error.response.data);
         });

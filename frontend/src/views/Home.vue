@@ -17,6 +17,7 @@
     </div>
     <div class="container my-5">
       <h2 class="mb-4">Votre fil d'actualité</h2>
+      <Publication v-for="publication in publications" :key="publication.id" :publication_id="publication.id" :avatar="publication.avatar" :author="publication.author" :content="publication.content" :attachment="publication.attachment" />
     </div>
   </div>
 </template>
@@ -27,16 +28,33 @@
 <script>
 // @ is an alias to /src
 
-import axios from "axios";
+import Publication from "@/components/Publication";
+import axios from "../axios/axios";
 
 export default {
   name: 'Home',
   data(){
     return {
-      postFile: null
+      postFile: null,
+      publications: []
     }
   },
   components: {
+    Publication
+  },
+  beforeCreate() {
+    axios.get("http://localhost:3000/publications/").then(response => {
+      const data = response.data;
+      data.forEach(publication => {
+        this.publications.push({
+          "id": publication.publication_id,
+          "avatar": publication.avatar,
+          "author": publication.nom + " " + publication.prenom,
+          "content": publication.content,
+          "attachment": publication.attachement
+        });
+      })
+    }).catch(error => this.$store.dispatch("sendError", error.response.data));
   },
   methods:{
     handleFileUpload(){

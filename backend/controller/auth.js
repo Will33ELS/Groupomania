@@ -23,6 +23,7 @@ exports.signup = (req, res, next) => {
 
 //AUTHENTIFICATION DE L'UTILISATEUR
 exports.signin = (req, res, next) => {
+    console.log(req.body)
     User.findOne({
         email: req.body.email
     }).then(user => {
@@ -35,6 +36,7 @@ exports.signin = (req, res, next) => {
                         return res.status(401).send("Les identifiants sont incorrects.")
                     // Définition de la clé d'authentification
                     res.status(200).json({
+                        userId: user.id,
                         token: jwt.sign(
                             {userId: user.id},
                             process.env.SECRET_KEY, //RECUPERATION DE LA CLE DANS LE FICHIER UTILS.JS
@@ -42,6 +44,7 @@ exports.signin = (req, res, next) => {
                         )
                     });
                 }).catch((error) => {
+                    console.log(error);
                 res.status(500).json({ error })
             });
         }

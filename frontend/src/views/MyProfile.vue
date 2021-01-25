@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "../axios/axios";
 
 export default {
   name: "MyProfile",
@@ -107,7 +107,7 @@ export default {
         //ENVOIE VERS LE SERVEUR
         axios.post('http://localhost:3000/profile/avatar', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
           }
         }).then(response => {
           this.avatarURL = response.data.avatarURL;

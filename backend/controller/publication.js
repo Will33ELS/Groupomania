@@ -1,14 +1,28 @@
+const sequelize = require("../database");
+const { QueryTypes } = require('sequelize');
+
 const Publication = require("../models/publication");
 const Likes = require("../models/likes");
 const userUtil = require("../utils/userUtils");
 
 /* RETOURNE LES PUBLICATIONS DANS L'ORDRE DECROISSANT */
 exports.getPublications = (req, res, next) => {
-    Publication.findAll({
-        order: [
-            [ 'id', 'DESC']
-        ]
-    }).then(publications => { res.status(200).json(publications); })
+    sequelize.query("SELECT users.nom as nom, users.prenom as prenom, users.avatarURL as avatar, publications.id as publication_id, publications.content as content, publications.attachement as attachement" +
+        " FROM publications INNER JOIN users ON users.id = publications.author_id ORDER BY publications.id DESC", {
+        type: QueryTypes.SELECT
+    })
+        .then(publications => { res.status(200).json(publications); })
+        .catch(error => res.status(500).json({ error }));
+}
+
+/* RECUPERER LES UTILISATEURS QUI ONT AIME LA PUBLICATION */
+exports.getLikesOnPublication = (req, res, next) => {
+    sequelize.query("SELECT user_id FROM like_publications WHERE publication_id = ?",
+        {
+            replacements: [req.params.id],
+            type: QueryTypes.SELECT
+        })
+        .then(likes => { res.status(200).json(likes); })
         .catch(error => res.status(500).json({ error }));
 }
 
@@ -38,17 +52,23 @@ exports.deletePublications = (req, res, next) => {
 
 /* AIMER OU NE PLUS AIMER UNE PUBLICATION */
 exports.likePublication = (req, res, next) => {
-    Likes.findOne({ user_id: req.body.user_id, publication_id: req.body.publication_id })
+    Likes.findOne({ user_id: req.body.user_id, publication_id: req.params.id })
         .then(like => {
             if(!like){ // L'utilisateur n'aime pas la publication, on ajoute le like
                 Likes.create({
                     user_id: req.body.user_id,
-                    publication_id: req.body.publication_id,
+                    publication_id: req.params.id,
                 })
-                    .then(() => res.status(201).json({ message: "Vous aimez désormais cette publication." }))
+                    .then(() => res.status(201).json({
+                        message: "Vous aimez désormais cette publication.",
+                        like: 1,
+                    }))
                     .catch(error => res.status(400).json({ error }));
             }else{ // L'utilisateur aime déjà la publication, on supprime le like
-                like.destroy().then(() => res.status(200).json({ message: "Vous n'avez plus cette publication. "}))
+                like.destroy().then(() => res.status(200).json({
+                    message: "Vous n'avez plus cette publication.",
+                    like: 0
+                }))
                     .catch(error => res.status(500).json({ error }));
             }
         }).catch(error => res.status(500).json({ error }));

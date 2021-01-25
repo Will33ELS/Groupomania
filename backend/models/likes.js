@@ -9,6 +9,7 @@ const Likes = database.define("like_publication", {
     },
     {
         timestamps: false,
+        modelName: 'like_publication'
     })
 
 module.exports = Likes;
