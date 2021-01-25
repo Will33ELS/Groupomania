@@ -17,7 +17,7 @@
     </div>
     <div class="container my-5">
       <h2 class="mb-4">Votre fil d'actualité</h2>
-      <Publication v-for="publication in publications" :key="publication.id" :publication_id="publication.id" :avatar="publication.avatar" :author="publication.author" :content="publication.content" :attachment="publication.attachment" />
+      <Publication v-for="publication in publications" :key="publication.id" :publication_id="publication.id" :avatar="publication.avatar" :author_id="publication.author_id" :author="publication.author" :content="publication.content" :attachment="publication.attachment" />
     </div>
   </div>
 </template>
@@ -50,6 +50,7 @@ export default {
           "id": publication.publication_id,
           "avatar": publication.avatar,
           "author": publication.nom + " " + publication.prenom,
+          "author_id": publication.author_id,
           "content": publication.content,
           "attachment": publication.attachement
         });
@@ -71,8 +72,8 @@ export default {
         formData.append("message", this.$refs.postContent.value);
         formData.append("file", this.postFile);
         //ENVOIE VERS LE SERVEUR
-        axios.post('http://localhost:3000/publications/create', formData).then(response => {
-          this.$store.dispatch("sendSuccess", response.data.message);
+        axios.post('http://localhost:3000/publications/create', formData).then(() => {
+          window.location = '/';
         }).catch(error => this.$store.dispatch("sendError", error.response.data));
       }
     }

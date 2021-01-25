@@ -7,7 +7,7 @@ const userUtil = require("../utils/userUtils");
 
 /* RETOURNE LES PUBLICATIONS DANS L'ORDRE DECROISSANT */
 exports.getPublications = (req, res, next) => {
-    sequelize.query("SELECT users.nom as nom, users.prenom as prenom, users.avatarURL as avatar, publications.id as publication_id, publications.content as content, publications.attachement as attachement" +
+    sequelize.query("SELECT users.id as author_id, users.nom as nom, users.prenom as prenom, users.avatarURL as avatar, publications.id as publication_id, publications.content as content, publications.attachement as attachement" +
         " FROM publications INNER JOIN users ON users.id = publications.author_id ORDER BY publications.id DESC", {
         type: QueryTypes.SELECT
     })
@@ -41,10 +41,11 @@ exports.getPublicationsFromUser = (req, res, next) => {
 
 /* SUPPRIMER UNE PUBLICATION */
 exports.deletePublications = (req, res, next) => {
-    Publication.findOne({ id: req.params.id })
+    Publication.findOne({ where: { id: req.params.id } })
         .then(publication => {
             //SUPPRESSION DE LA PUBLICATION
-            publication.destroy().then(() => res.status(200).json({ message: "Publications supprimé avec succés !" }))
+            publication.destroy()
+                .then(() => res.status(200).json({ message: "Publications supprimé avec succés !" }))
                 .catch(error => res.status(500).json({ error }));
 
         }).catch(error => res.status(500).json({ error }));

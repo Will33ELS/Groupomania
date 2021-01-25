@@ -25,7 +25,9 @@ exports.signup = (req, res, next) => {
 exports.signin = (req, res, next) => {
     console.log(req.body)
     User.findOne({
-        email: req.body.email
+        where:{
+            email: req.body.email
+        }
     }).then(user => {
         if(!user)
             res.status(404).send("Les identifiants sont incorrects.");
@@ -37,6 +39,7 @@ exports.signin = (req, res, next) => {
                     // Définition de la clé d'authentification
                     res.status(200).json({
                         userId: user.id,
+                        isAdmin: user.isAdmin,
                         token: jwt.sign(
                             {userId: user.id},
                             process.env.SECRET_KEY, //RECUPERATION DE LA CLE DANS LE FICHIER UTILS.JS
@@ -54,7 +57,9 @@ exports.signin = (req, res, next) => {
 //CHANGEMENT DU MOT DE PASSE
 exports.password = (req, res, next) => {
     User.findOne({
-        id: userUtil.getUserID()
+        where:{
+            id: userUtil.getUserID()
+        }
     }).then(user => {
         bcrypt.compare(req.body.password, user.password)
             .then(valid => {
@@ -81,7 +86,9 @@ exports.password = (req, res, next) => {
 //SUPPRESSION DU COMPTE
 exports.unregister = (req, res, next) => {
     User.findOne({ //Recherche de l'utilisateur
-        id: userUtil.getUserID(req)
+        where:{
+            id: userUtil.getUserID(req)
+        }
     }).then(user => {
         //COMPARAISON DES MOTS DE PASSE
         bcrypt.compare(req.body.password, user.password)

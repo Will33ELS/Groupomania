@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     token: localStorage.getItem("user-token"),
     userId: Number(localStorage.getItem("user-id")),
+    isAdmin: localStorage.getItem("is-admin"),
     error: null,
     success: null,
   },
@@ -17,20 +18,23 @@ export default new Vuex.Store({
     CHANGE_SUCCESS(state, success){
       state.success = success;
     },
-    AUTH_SUCCESS(state, token, userId){
+    AUTH_SUCCESS(state, token, userId, isAdmin){
       state.token = token
       state.userId = userId
+      state.isAdmin = isAdmin;
     },
   },
   actions: {
     authLogout: (context) => {
       localStorage.removeItem("user-id"); // Suppression de l'userID dans le stockage
       localStorage.removeItem("user-token") // Suppression du token dans le stockage
+      localStorage.removeItem("is-admin") // Suppression da permission administrateur dans le stockage
       context.commit('AUTH_SUCCESS', null, null);
     },
     authLogin: ({commit}, user) => {
       localStorage.setItem("user-id", user.userId);
       localStorage.setItem("user-token", user.token);
+      localStorage.setItem("is-admin", user.isAdmin);
       commit('AUTH_SUCCESS', user.token, user.userId);
     },
     sendError: (context, error) => {

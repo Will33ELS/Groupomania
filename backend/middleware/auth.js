@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 
 //Vérification de l'authentification
 exports.logged = (req, res, next) => {
-    console.log(req.headers.authorization);
     try {
         const token = req.headers.authorization;
         const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
@@ -24,9 +23,13 @@ exports.logged = (req, res, next) => {
 
 exports.canDelete = (req, res, next) => {
     try{
+        const token = req.headers.authorization;
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+        const userId = decodedToken.userId;
+
         User.findOne({
             [Op.or]: [
-                { user_id: req.body.user_id },
+                { user_id: userId },
                 { isAdmin: 1}
             ]
         }).then(user => {

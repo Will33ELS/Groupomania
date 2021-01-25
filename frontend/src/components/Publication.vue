@@ -10,13 +10,13 @@
             </div>
           </a>
         </div>
-        <div class="tool">
+        <div v-if="this.author_id == this.$store.state.userId || this.$store.state.isAdmin" class="tool">
           <div class="dropdown">
             <a href="#" role="button" id="publicationSettings" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fas fa-ellipsis-h"></i>
             </a>
             <ul class="dropdown-menu" aria-labelledby="publicationSettings">
-              <li><a class="dropdown-item" href="#">Supprimer</a></li>
+              <li><a class="dropdown-item" @click="deletePublication" href="#">Supprimer</a></li>
             </ul>
           </div>
         </div>
@@ -65,6 +65,10 @@ export default {
       type: String,
       default: "images/avatar-defaut.png",
     },
+    author_id:{
+      type: Number,
+      required: true
+    },
     author:{
       type: String,
       required: true
@@ -78,30 +82,39 @@ export default {
     }
   },
   methods:{
+    //INTERACTION SUR LE BOUTON LIKE, LE SERVEUR BACKEND GERE SI L'UTILISATEUR AIME OU N'AIME PLUS LA PUBLICATION
     likePost: function (e){
       e.preventDefault();
       axios.post(`http://localhost:3000/publications/${this.id}/like`, {
         user_id: this.$store.state.userId
       })
           .then((response) => {
-            if(response.data.like == 0) {
+            if(response.data.like == 0) { //L'UTILISATEUR AIME DESORMAIS LA PUBLICATION
               this.likes = this.likes.filter(user => user !== this.$store.state.userId)
               document.getElementById("like-button-"+this.id).classList.remove("active");
-            } else {
+            } else { // L'UTILISATEUR N'AIME PLUS LA PUBLICATION
               this.likes.push(this.$store.state.userId);
               document.getElementById("like-button-"+this.id).classList.add("active");
             }
             this.$forceUpdate();
-          }).catch(error => this.$store.dispatch("sendError", error));
+          }).catch(error => this.$store.dispatch("sendError", error.response.data));
+    },
+    deletePublication: function () {
+      axios.delete(`http://localhost:3000/publications/${this.id}`)
+      .then(() => {
+        window.location = "/";
+      })
+      .catch(error => this.$store.dispatch("sendError", error.response.data))
     }
   },
   created() {
+    //CHARGEMENT DES LIKES DE LA PUBLICATION
     axios.get(`http://localhost:3000/publications/${this.id}/like`).then(response => {
       const data = response.data;
       data.forEach(like => {
         this.likes.push(like.user_id);
       });
-      if(this.likes.length !== 0 && this.likes.includes(this.$store.state.userId)){
+      if(this.likes.includes(this.$store.state.userId)){
         document.getElementById("like-button-"+this.id).classList.add("active");
       }
     }).catch(error => this.$store.dispatch("sendError", error.response.data));

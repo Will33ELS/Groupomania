@@ -39,7 +39,8 @@ export default {
           window.location = "/";
           this.$store.dispatch("authLogin", {
             userId: response.data.userId,
-            token: response.data.token
+            token: response.data.token,
+            isAdmin: response.data.isAdmin
           });
           this.$store.dispatch("sendSuccess", "Vous êtes connecté !");
         }).catch(error => {
