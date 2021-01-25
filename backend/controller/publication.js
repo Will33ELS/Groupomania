@@ -52,7 +52,7 @@ exports.deletePublications = (req, res, next) => {
 
 /* AIMER OU NE PLUS AIMER UNE PUBLICATION */
 exports.likePublication = (req, res, next) => {
-    Likes.findOne({ user_id: req.body.user_id, publication_id: req.params.id })
+    Likes.findOne({ where:{ user_id: req.body.user_id, publication_id: req.params.id } })
         .then(like => {
             if(!like){ // L'utilisateur n'aime pas la publication, on ajoute le like
                 Likes.create({

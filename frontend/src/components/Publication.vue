@@ -78,12 +78,12 @@ export default {
     }
   },
   methods:{
-    likePost: function (){
+    likePost: function (e){
+      e.preventDefault();
       axios.post(`http://localhost:3000/publications/${this.id}/like`, {
         user_id: this.$store.state.userId
       })
           .then((response) => {
-            this.$store.dispatch("sendSuccess", response.data.message);
             if(response.data.like == 0) {
               this.likes = this.likes.filter(user => user !== this.$store.state.userId)
               document.getElementById("like-button-"+this.id).classList.remove("active");
