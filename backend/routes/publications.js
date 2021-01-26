@@ -12,4 +12,6 @@ router.delete("/:id", authMiddleware.logged, authMiddleware.canDelete, publicati
 router.post("/:id/like", authMiddleware.logged, publicationsController.likePublication); //Route pour ajouter ou supprimer un like sur une publication
 router.post("/create", authMiddleware.logged, multerMiddleware, publicationsController.createPublication); //Route pour créer une publication
 
+router.get("/:id/commentaires", authMiddleware.logged, publicationsController.getCommentairesOnPublication); // Route pour récupérer les commentaires
+
 module.exports = router;

@@ -36,7 +36,7 @@
         </div>
         <div class="publication-footer-item mx-3">
           <a href="#">
-            <i class="fas fa-comment"></i> Commenter (X)
+            <i class="fas fa-comment"></i> Commenter ({{ this.commentaireNumber }})
           </a>
         </div>
       </div>
@@ -52,7 +52,7 @@ export default {
   data(){
     return{
       likes: [],
-      likesNumber: 0,
+      commentaireNumber: 0,
       id: this.publication_id
     }
   },
@@ -117,6 +117,12 @@ export default {
       if(this.likes.includes(this.$store.state.userId)){
         document.getElementById("like-button-"+this.id).classList.add("active");
       }
+    }).catch(error => this.$store.dispatch("sendError", error.response.data));
+
+    //RECUPERATION DES COMMENTAIRES DE LA PUBLICATION
+    axios.get(`http://localhost:3000/publications/${this.id}/commentaires`)
+    .then(response => {
+      this.commentaireNumber = response.data.length;
     }).catch(error => this.$store.dispatch("sendError", error.response.data));
   }
 }

@@ -90,3 +90,14 @@ exports.createPublication = (req, res, next) => {
         .then(() => res.status(201).json({ message: "Votre publication a bien été crée. "}))
         .catch(error => res.status(500).json({ error }));
 }
+
+/* Récupérer les commentaires d'une publication */
+exports.getCommentairesOnPublication = (req, res, next) => {
+    sequelize.query("SELECT users.nom AS nom, users.prenom AS prenom, commentaires.content AS content FROM commentaires INNER JOIN users ON users.id = commentaires.author_id WHERE commentaires.publication_id = ?",
+        {
+            replacements: [req.params.id],
+            type: QueryTypes.SELECT
+        })
+        .then(likes => { res.status(200).json(likes); })
+        .catch(error => res.status(500).json({ error }));
+}
