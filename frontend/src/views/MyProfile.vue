@@ -11,7 +11,7 @@
       </div>
       <div class="col-12 col-md-4">
         <h2 class="my-4">Changer votre image de profile</h2>
-        <img class="my-3 profile-img" :src="avatarURL == null ? 'images/avatar-defaut.png' : avatarURL" alt="Votre photo de profile"/>
+        <img class="my-3 profile-img" :src="avatarURL == null ? '/images/avatar-defaut.png' : avatarURL" alt="Votre photo de profile"/>
         <form @submit="changeAvatar" class="row justify-content-center">
           <div class="col-12 col-lg-8">
             <input type="file" id="avatar" ref="avatar" class="custom-file-input" @change="handleFileUpload" accept="image/png, image/jpeg"/>

@@ -4,7 +4,7 @@
       <div class="publication-header">
         <div class="author">
           <a href="#" class="d-inline-flex align-items-center">
-            <img class="author-avatar" :src="avatar == null ? 'images/avatar-defaut.png' : avatar" alt="Author"/>
+            <img class="author-avatar" :src="avatar == null ? '/images/avatar-defaut.png' : avatar" alt="Author"/>
             <div class="author-name">
               {{ author }}
             </div>
@@ -35,9 +35,9 @@
           </a>
         </div>
         <div class="publication-footer-item mx-3">
-          <a href="#">
+          <router-link :to='"/publication/"+this.publication_id'>
             <i class="fas fa-comment"></i> Commenter ({{ this.commentaireNumber }})
-          </a>
+          </router-link>
         </div>
       </div>
     </div>
@@ -63,7 +63,7 @@ export default {
     },
     avatar:{
       type: String,
-      default: "images/avatar-defaut.png",
+      default: "/images/avatar-defaut.png",
     },
     author_id:{
       type: Number,
@@ -101,10 +101,10 @@ export default {
     },
     deletePublication: function () {
       axios.delete(`http://localhost:3000/publications/${this.id}`)
-      .then(() => {
-        window.location = "/";
-      })
-      .catch(error => this.$store.dispatch("sendError", error.response.data))
+          .then(() => {
+            window.location = "/";
+          })
+          .catch(error => this.$store.dispatch("sendError", error.response.data))
     }
   },
   created() {
@@ -121,9 +121,9 @@ export default {
 
     //RECUPERATION DES COMMENTAIRES DE LA PUBLICATION
     axios.get(`http://localhost:3000/publications/${this.id}/commentaires`)
-    .then(response => {
-      this.commentaireNumber = response.data.length;
-    }).catch(error => this.$store.dispatch("sendError", error.response.data));
+        .then(response => {
+          this.commentaireNumber = response.data.length;
+        }).catch(error => this.$store.dispatch("sendError", error.response.data));
   }
 }
 </script>

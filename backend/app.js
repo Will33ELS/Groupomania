@@ -6,6 +6,7 @@ const path = require("path");
 const authRoute = require("./routes/auth");
 const profileRoute = require("./routes/profile");
 const publicationsRoute = require("./routes/publications");
+const commentaireRoute = require("./routes/commentaire");
 
 // CORS
 app.use((req, res, next) => {
@@ -29,5 +30,8 @@ app.use("/profile", profileRoute);
 
 //Routes des publications
 app.use("/publications", publicationsRoute);
+
+//Routes des commentaires
+app.use("/commentaire", commentaireRoute);
 
 module.exports = app;

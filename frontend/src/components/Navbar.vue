@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col text-center">
         <a href="/">
-          <img src="images/banniere.png" alt="Bannière groupomania"/>
+          <img src="/images/banniere.png" alt="Bannière groupomania"/>
         </a>
       </div>
     </div>

@@ -15,6 +15,19 @@ exports.getPublications = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 }
 
+/* RECUPERER UNE PUBLICATION A PARTIR DE L'ID */
+exports.getPublicationByID = (req, res, next) => {
+    sequelize.query("SELECT users.id as author_id, users.nom as nom, users.prenom as prenom, users.avatarURL as avatar, publications.content as content, publications.attachement as attachement" +
+        " FROM publications INNER JOIN users ON users.id = publications.author_id WHERE publications.id = ? ORDER BY publications.id DESC",
+        {
+            plain: true,
+            replacements: [req.params.id],
+            type: QueryTypes.SELECT
+        })
+        .then(publication => { res.status(200).json(publication); })
+        .catch(error => res.status(500).json({ error }));
+}
+
 /* RECUPERER LES UTILISATEURS QUI ONT AIME LA PUBLICATION */
 exports.getLikesOnPublication = (req, res, next) => {
     sequelize.query("SELECT user_id FROM like_publications WHERE publication_id = ?",
@@ -88,16 +101,5 @@ exports.createPublication = (req, res, next) => {
         attachement: fileUrl
     })
         .then(() => res.status(201).json({ message: "Votre publication a bien été crée. "}))
-        .catch(error => res.status(500).json({ error }));
-}
-
-/* Récupérer les commentaires d'une publication */
-exports.getCommentairesOnPublication = (req, res, next) => {
-    sequelize.query("SELECT users.nom AS nom, users.prenom AS prenom, commentaires.content AS content FROM commentaires INNER JOIN users ON users.id = commentaires.author_id WHERE commentaires.publication_id = ?",
-        {
-            replacements: [req.params.id],
-            type: QueryTypes.SELECT
-        })
-        .then(likes => { res.status(200).json(likes); })
         .catch(error => res.status(500).json({ error }));
 }

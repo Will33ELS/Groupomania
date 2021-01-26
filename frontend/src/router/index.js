@@ -6,6 +6,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import MyProfile from '../views/MyProfile.vue'
+import Publication from '../views/Publication'
 
 Vue.use(VueRouter)
 
@@ -48,6 +49,12 @@ const routes = [
     path: '/myprofile',
     name: 'MyProfile',
     component: MyProfile,
+    beforeEnter: ifAuthenticated,
+  },
+  {
+    path: '/publication/:id',
+    name: 'Publication',
+    component: Publication,
     beforeEnter: ifAuthenticated,
   },
 ]
