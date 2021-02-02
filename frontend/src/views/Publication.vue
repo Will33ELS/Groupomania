@@ -6,12 +6,12 @@
         <div class="publication col-10">
           <div class="publication-header">
             <div class="author">
-              <a href="#" class="d-inline-flex align-items-center">
+              <router-link :to="'/profile/'+this.author.id" class="d-inline-flex align-items-center">
                 <img class="author-avatar" :src="this.author.avatar == null ? '/images/avatar-defaut.png' : this.author.avatar" alt="Author"/>
                 <div class="author-name">
                   {{ this.author.name }}
                 </div>
-              </a>
+              </router-link>
             </div>
             <div v-if="this.author.id == this.$store.state.userId || this.$store.state.isAdmin" class="tool">
               <div class="dropdown">
@@ -74,10 +74,6 @@
           <div class="col-12 my-1">Posté le {{ commentaire.date}}</div>
           <div class="col-12 text-break my-2">{{ commentaire.commentaire }}</div>
           <div class="col-12 my-3">
-            <a href="#commentaire" v-if="commentaire.authorId != $store.state.userId" class="btn btn-warning mx-1 button">
-              <i class="fas fa-exclamation-triangle"></i>
-              Signaler
-            </a>
             <a href="#commentaire" @click="deleteCommentaire(commentaire.id)" v-if="commentaire.authorId == $store.state.userId || $store.state.isAdmin" class="btn btn-danger mx-1 button">
               <i class="fas fa-trash"></i>
               Supprimer

@@ -3,12 +3,12 @@
     <div class="publication col-10">
       <div class="publication-header">
         <div class="author">
-          <a href="#" class="d-inline-flex align-items-center">
+          <router-link :to="'/profile/'+this.author_id" class="d-inline-flex align-items-center">
             <img class="author-avatar" :src="avatar == null ? '/images/avatar-defaut.png' : avatar" alt="Author"/>
             <div class="author-name">
               {{ author }}
             </div>
-          </a>
+          </router-link>
         </div>
         <div v-if="this.author_id == this.$store.state.userId || this.$store.state.isAdmin" class="tool">
           <div class="dropdown">

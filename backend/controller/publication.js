@@ -41,14 +41,13 @@ exports.getLikesOnPublication = (req, res, next) => {
 
 /* RECUPERER LES PUBLICATIONS D'UN UTILISATEUR */
 exports.getPublicationsFromUser = (req, res, next) => {
-    Publication.findAll({
-        where:{
-            author_id: req.params.user_id
-        },
-        order: [
-            ['id', 'DESC']
-        ]
-    }).then(publications => { res.status(200).json(publications); })
+    sequelize.query("SELECT users.id as author_id, users.nom as nom, users.prenom as prenom, users.avatarURL as avatar, publications.content as content, publications.attachement as attachement, publications.id as publication_id" +
+        " FROM publications INNER JOIN users ON users.id = publications.author_id WHERE publications.author_id = ? ORDER BY publications.id DESC",
+        {
+            replacements: [req.params.user_id],
+            type: QueryTypes.SELECT
+        })
+        .then(publication => { res.status(200).json(publication); })
         .catch(error => res.status(500).json({ error }));
 };
 

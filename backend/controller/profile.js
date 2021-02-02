@@ -46,3 +46,21 @@ exports.changeAvatar = (req, res, next) => {
         }
     }).catch(error => res.status(500).json({ error }));
 }
+
+// Récupération des informations de base d'un profil à partir d'un ID
+exports.getProfile = (req, res, next) => {
+    User.findOne({ where:{
+            id: req.params.id
+        }
+    }).then(user => {
+        if(!user){
+            res.status(404).json({ error: "Cet utilisateur n'existe pas." })
+        }else {
+            res.status(200).json({
+                nom: user.nom,
+                prenom: user.prenom,
+                avatarURL: user.avatarURL
+            })
+        }
+    }).catch(error => res.status(500).json({ error }));
+}
