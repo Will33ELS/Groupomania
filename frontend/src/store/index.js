@@ -32,7 +32,7 @@ export default new Vuex.Store({
       context.commit('AUTH_SUCCESS', null, null);
     },
     authLogin: ({commit}, user) => {
-      localStorage.setItem("user-id", user.userId);
+      localStorage.setItem("user", user.userId);
       localStorage.setItem("user-token", user.token);
       localStorage.setItem("is-admin", user.isAdmin);
       commit('AUTH_SUCCESS', user.token, user.userId);

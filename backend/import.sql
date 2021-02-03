@@ -30,7 +30,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `users` (`id`, `nom`, `prenom`, `email`, `avatarURL`, `password`, `isAdmin`) VALUES
-(1, 'Administrateur', 'Groupomania', 'admin@groupomania.fr', NULL, '$2b$10$JJM0z/QoYoah5IUVzIjXwuQzxQkAgeSB1VA8dnk19z7.HI10lUx62', 0);
+(1, 'Administrateur', 'Groupomania', 'admin@groupomania.fr', NULL, '$2b$10$JJM0z/QoYoah5IUVzIjXwuQzxQkAgeSB1VA8dnk19z7.HI10lUx62', 1);
 
 ALTER TABLE `commentaires`
   ADD PRIMARY KEY (`id`);

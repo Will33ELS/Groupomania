@@ -67,8 +67,10 @@
       <!-- Fin d'alerte -->
       <div v-for="commentaire in publication.commentaires" :key="commentaire.id" v-else class="row p-3 m-3 commentaire">
         <div class="col-12 col-md-3 text-center">
-          <img :src="commentaire.authorAvatar == null ? '/images/avatar-defaut.png' : commentaire.authorAvatar" :alt="commentaire.authorName" class="commentaire-avatar"/>
-          <div class="text-truncate mt-2">{{ commentaire.authorName }}</div>
+          <router-link class="commentaire-link" :to="'/profile/'+commentaire.authorId">
+            <img :src="commentaire.authorAvatar == null ? '/images/avatar-defaut.png' : commentaire.authorAvatar" :alt="commentaire.authorName" class="commentaire-avatar"/>
+            <div class="text-truncate mt-2">{{ commentaire.authorName }}</div>
+          </router-link>
         </div>
         <div class="col-12 col-md-9 justify-content-center justify-content-md-start text-center text-md-start">
           <div class="col-12 my-1">Posté le {{ commentaire.date}}</div>
@@ -148,11 +150,11 @@ export default {
   methods:{
     deleteCommentaire: function (commentaire_id){
       axios.delete(`http://localhost:3000/commentaire/${commentaire_id}`)
-      .then(response => {
-        this.publication.commentaires = this.publication.commentaires.filter(commentaire => commentaire_id !== commentaire.id);
-        this.$store.dispatch("sendSuccess", response.data.message);
-      })
-      .catch(error => this.$store.dispatch("sendError", error.response.data));
+          .then(response => {
+            this.publication.commentaires = this.publication.commentaires.filter(commentaire => commentaire_id !== commentaire.id);
+            this.$store.dispatch("sendSuccess", response.data.message);
+          })
+          .catch(error => this.$store.dispatch("sendError", error.response.data));
     },
     addCommentaire: function (e){
       e.preventDefault();
@@ -165,8 +167,8 @@ export default {
           userId: this.$store.state.userId,
           content: this.$refs.commentaire.value
         })
-        .then(() => { window.location.reload(); })
-        .catch(error => this.$store.dispatch("sendError", error.response.data))
+            .then(() => { window.location.reload(); })
+            .catch(error => this.$store.dispatch("sendError", error.response.data))
       }
     }
   }
@@ -174,14 +176,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .commentaire{
-    border: 1px lightgray solid;
-    box-shadow: 4px 4px 5px lightgray;
-    font-size: 18px;
-    &-avatar{
-      width: 100px;
-      height: 100px;
-      border-radius: 50px;
+.commentaire{
+  border: 1px lightgray solid;
+  box-shadow: 4px 4px 5px lightgray;
+  font-size: 18px;
+  &-avatar{
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+  }
+  &-link{
+    text-decoration: none;
+    color: black;
+    transition: all 0.2s;
+    &:hover{
+      color: orangered;
+      text-decoration: underline;
     }
   }
+}
 </style>
