@@ -8,8 +8,9 @@ exports.myProfile = (req, res, next) => {
     //Récupération du userID dans le token d'authentification
     const userId = userUtil.getUserID(req);
 
-    User.findOne({
-        id: userId
+    User.findOne({ where: {
+            id: userId
+        }
     }).then(user => {
         if(!user)
             res.status(404).send("Compte introuvable");
@@ -29,8 +30,9 @@ exports.myProfile = (req, res, next) => {
 //Changement de l'avatar
 exports.changeAvatar = (req, res, next) => {
     const userId = userUtil.getUserID(req);
-    User.findOne({
-        id: userId
+    User.findOne({ where:{
+            id: userId
+        }
     }).then(user => {
         if(!user)
             res.status(404).send("Compte introuvable");
