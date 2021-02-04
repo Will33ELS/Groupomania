@@ -56,7 +56,7 @@ exports.getProfile = (req, res, next) => {
         }
     }).then(user => {
         if(!user){
-            res.status(404).json({ error: "Cet utilisateur n'existe pas." })
+            res.status(404).json("Cet utilisateur n'existe pas.")
         }else {
             res.status(200).json({
                 nom: user.nom,
@@ -67,3 +67,49 @@ exports.getProfile = (req, res, next) => {
         }
     }).catch(error => res.status(500).json({ error }));
 }
+
+// Attribuer la permission administrateur
+exports.givePermissionAdmin = async (req, res, next) => {
+    const userId = userUtil.getUserID(req);
+    const isAdmin = await userUtil.isAdmin(userId);
+    if(isAdmin){
+        User.findOne({ where:{
+                id: req.params.id
+            }
+        }).then(user => {
+            if(!user){
+                res.status(404).json("Cet utilisateur n'existe pas.");
+            }else{
+                user.isAdmin = true;
+                user.save().then(() => {
+                    res.status(200).json({ message: "Permission administrateur attribué pour cet utilisateur." })
+                }).catch(error => { res.status(500).json({ error })});
+            }
+        })
+    }else{
+        res.status(401).json("Vous n'avez pas la permission.");
+    }
+};
+
+// Revoquer la permission administrateur
+exports.revoquePermissionAdmin = async (req, res, next) => {
+    const userId = userUtil.getUserID(req);
+    const isAdmin = await userUtil.isAdmin(userId);
+    if(isAdmin){
+        User.findOne({ where:{
+                id: req.params.id
+            }
+        }).then(user => {
+            if(!user){
+                res.status(404).json("Cet utilisateur n'existe pas.");
+            }else{
+                user.isAdmin = false;
+                user.save().then(() => {
+                    res.status(200).json({ message: "Permission administrateur révoqué pour cet utilisateur." })
+                }).catch(error => { res.status(500).json({ error })});
+            }
+        })
+    }else{
+        res.status(401).json("Vous n'avez pas la permission.");
+    }
+};
