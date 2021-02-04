@@ -35,10 +35,11 @@ export default new Vuex.Store({
       localStorage.removeItem("user-id"); // Suppression de l'userID dans le stockage
       localStorage.removeItem("user-token") // Suppression du token dans le stockage
       localStorage.removeItem("is-admin") // Suppression da permission administrateur dans le stockage
+      localStorage.removeItem("user-refresh-token");
       context.commit('AUTH_SUCCESS', null, null);
     },
     authLogin: ({commit}, user) => {
-      localStorage.setItem("user", user.userId);
+      localStorage.setItem("user-id", user.userId);
       localStorage.setItem("user-token", user.token);
       localStorage.setItem("user-refresh-token", user.refreshToken);
       localStorage.setItem("is-admin", user.isAdmin);

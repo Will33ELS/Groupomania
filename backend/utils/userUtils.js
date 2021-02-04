@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+const sequelize = require("../database");
+const { QueryTypes } = require('sequelize');
 
 //Récupérer l'UserID à partir de la clé d'authentification
 exports.getUserID = (req) => {
@@ -6,4 +8,20 @@ exports.getUserID = (req) => {
     const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
     const userId = decodedToken.userId;
     return userId;
+}
+
+//Vérifié si un utilisateur est administrateur
+exports.isAdmin = async (userId) => {
+    let admin = await sequelize.query("SELECT isAdmin FROM users WHERE id = ?",
+        {
+            plain: true,
+            replacements: [userId],
+            type: QueryTypes.SELECT
+        }
+    ).then(user => {
+        if (user.isAdmin === 1)
+            return true;
+        return false
+    });
+    return admin;
 }

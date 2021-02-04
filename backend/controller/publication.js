@@ -52,15 +52,22 @@ exports.getPublicationsFromUser = (req, res, next) => {
 };
 
 /* SUPPRIMER UNE PUBLICATION */
-exports.deletePublications = (req, res, next) => {
-    Publication.findOne({ where: { id: req.params.id } })
-        .then(publication => {
-            //SUPPRESSION DE LA PUBLICATION
-            publication.destroy()
-                .then(() => res.status(200).json({ message: "Publications supprimé avec succés !" }))
-                .catch(error => res.status(500).json({ error }));
+exports.deletePublications = async (req, res, next) => {
+    const userID = userUtil.getUserID(req);
+    const publication = await getPublication(req.params.id);
+    const isAdmin = await userUtil.isAdmin(userID);
+    if (publication.author_id === userID || isAdmin) {
+        Publication.findOne({where: {id: req.params.id}})
+            .then(publication => {
+                //SUPPRESSION DE LA PUBLICATION
+                publication.destroy()
+                    .then(() => res.status(200).json({message: "Publications supprimé avec succés !"}))
+                    .catch(error => res.status(500).json({error}));
 
-        }).catch(error => res.status(500).json({ error }));
+            }).catch(error => res.status(500).json({error}));
+    }  else {
+        res.status(401).json("Vous n'avez pas la permission.")
+    }
 }
 
 /* AIMER OU NE PLUS AIMER UNE PUBLICATION */
@@ -101,4 +108,15 @@ exports.createPublication = (req, res, next) => {
     })
         .then(() => res.status(201).json({ message: "Votre publication a bien été crée. "}))
         .catch(error => res.status(500).json({ error }));
+}
+
+const getPublication = async (publication_id) => {
+    let publication = await sequelize.query("SELECT * FROM publications WHERE id = ?", {
+        plain: true,
+        replacements: [publication_id],
+        type: QueryTypes.SELECT
+    }).then(response => {
+        return response;
+    });
+    return publication;
 }

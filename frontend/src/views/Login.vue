@@ -43,19 +43,6 @@ export default {
             refreshToken: response.data.refreshToken,
             isAdmin: response.data.isAdmin
           });
-          const task = setInterval(() => {
-            axios.post("auth/refresh",{
-              userId: this.$store.state.userId,
-              refreshToken: this.$store.state.refreshToken
-            }).then((response) => {
-              this.$store.commit("AUTH_REFRESH", response.data.accessToken, response.data.refreshToken);
-            }).catch(error => {
-              console.log(error)
-              clearInterval(task);
-              this.$store.dispatch("authLogout");
-              window.location = "/";
-            }, 1000 * 60 * 2);
-          })
           this.$store.dispatch("sendSuccess", "Vous êtes connecté !");
         }).catch(error => {
             this.$store.dispatch("sendError", error.response.data);

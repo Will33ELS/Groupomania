@@ -61,7 +61,8 @@ exports.getProfile = (req, res, next) => {
             res.status(200).json({
                 nom: user.nom,
                 prenom: user.prenom,
-                avatarURL: user.avatarURL
+                avatarURL: user.avatarURL,
+                isAdmin: user.isAdmin
             })
         }
     }).catch(error => res.status(500).json({ error }));

@@ -2,7 +2,10 @@
   <div class="container">
     <div class="row my-4 justify-content-center">
       <img class="profile-img" :src="profile.img == null ? '/images/avatar-defaut.png' : profile.img" alt="Author"/>
-      <h1 class="my-2">Profile de {{ profile.name }}</h1>
+      <h1 class="h3 my-2">Profile de {{ profile.name }} </h1>
+      <div v-if="profile.isAdmin" class="col-12">
+        <span class="badge bg-danger">Administrateur</span>
+      </div>
     </div>
     <hr/>
     <h2 class="my-4">Dernières publications</h2>
@@ -23,19 +26,20 @@ export default {
     return {
       profile:{
         img: null,
-        name: null
+        name: null,
+        isAdmin: false,
       },
       publications: []
     }
   },
   beforeCreate() {
-    axios.get(`http://localhost:3000/profile/${this.$route.params.id}`).then(response => {
+    axios.get(`profile/${this.$route.params.id}`).then(response => {
       const data = response.data;
       this.profile.name = data.nom + " " + data.prenom;
       this.profile.img = data.avatarURL;
+      this.profile.isAdmin = data.isAdmin;
     }).catch(() => window.location = "/");
-    axios.get(`http://localhost:3000/publications/author/${this.$route.params.id}`).then(response => {
-      console.log(response)
+    axios.get(`publications/author/${this.$route.params.id}`).then(response => {
       const data = response.data;
       data.forEach(publication => {
         this.publications.push({

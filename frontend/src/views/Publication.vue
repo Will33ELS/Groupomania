@@ -111,7 +111,7 @@ export default {
   },
   beforeCreate() {
     //RECUPERATION DES DONNEES DE LA PUBLICATION
-    axios.get(`http://localhost:3000/publications/${this.$route.params.id}`)
+    axios.get(`publications/${this.$route.params.id}`)
         .then(response => {
           const data = response.data;
           this.publication.content = data.content;
@@ -122,7 +122,7 @@ export default {
         }).catch(() => window.location = "/" );
 
     //CHARGEMENT DES LIKES DE LA PUBLICATION
-    axios.get(`http://localhost:3000/publications/${this.$route.params.id}/like`).then(response => {
+    axios.get(`publications/${this.$route.params.id}/like`).then(response => {
       const data = response.data;
       data.forEach(like => {
         this.publication.likes.push(like.user_id);
@@ -132,7 +132,7 @@ export default {
       }
     }).catch(error => this.$store.dispatch("sendError", error));
     //RECUPERATION DES COMMENTAIRES DE LA PUBLICATION
-    axios.get(`http://localhost:3000/publications/${this.$route.params.id}/commentaires`)
+    axios.get(`publications/${this.$route.params.id}/commentaires`)
         .then(response => {
           const data = response.data;
           data.forEach(commentaire => {
@@ -149,7 +149,7 @@ export default {
   },
   methods:{
     deleteCommentaire: function (commentaire_id){
-      axios.delete(`http://localhost:3000/commentaire/${commentaire_id}`)
+      axios.delete(`commentaire/${commentaire_id}`)
           .then(response => {
             this.publication.commentaires = this.publication.commentaires.filter(commentaire => commentaire_id !== commentaire.id);
             this.$store.dispatch("sendSuccess", response.data.message);
@@ -162,7 +162,8 @@ export default {
       {
         this.$store.dispatch("sendError", "Votre commentaire doit avoir un contenu.")
       }else {
-        axios.post("http://localhost:3000/commentaire/add", {
+        console.log(this.$store.state.userId);
+        axios.post("commentaire/add", {
           publicationId: this.publication.id,
           userId: this.$store.state.userId,
           content: this.$refs.commentaire.value

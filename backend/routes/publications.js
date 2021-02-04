@@ -10,7 +10,7 @@ router.get("/", authMiddleware.logged, publicationsController.getPublications); 
 router.get("/:id", authMiddleware.logged, publicationsController.getPublicationByID); //Route pour récupérer une publication
 router.get("/:id/like", authMiddleware.logged, publicationsController.getLikesOnPublication); //Route pour ajouter ou supprimer un like sur une publication
 router.get("/author/:user_id", authMiddleware.logged, publicationsController.getPublicationsFromUser); //Route pour récupérer les publications d'un utilisateur
-router.delete("/:id", authMiddleware.logged, authMiddleware.canDelete, publicationsController.deletePublications); //Route pour supprimer une publication
+router.delete("/:id", authMiddleware.logged, publicationsController.deletePublications); //Route pour supprimer une publication
 router.post("/:id/like", authMiddleware.logged, publicationsController.likePublication); //Route pour ajouter ou supprimer un like sur une publication
 router.post("/create", authMiddleware.logged, multerMiddleware, publicationsController.createPublication); //Route pour créer une publication
 

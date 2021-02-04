@@ -44,7 +44,7 @@ export default {
       if(!this.nom || !this.prenom || !this.email || !this.password){
         this.$store.dispatch("sendError", "Tous les champs sont requis.");
       }else{
-        axios.post("http://localhost:3000/auth/register", {
+        axios.post("auth/register", {
           nom: this.nom,
           prenom: this.prenom,
           email: this.email,

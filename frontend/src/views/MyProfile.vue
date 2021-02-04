@@ -76,7 +76,7 @@ export default {
     }
   },
   beforeMount() {
-    axios.get("http://localhost:3000/profile")
+    axios.get("profile")
         .then(response => {
           this.nom = response.data.nom;
           this.prenom = response.data.prenom;
@@ -105,7 +105,7 @@ export default {
         //AJOUT DE L'IMAGE DANS LE FORMULAIRE
         formData.append("file", this.avatarFile);
         //ENVOIE VERS LE SERVEUR
-        axios.post('http://localhost:3000/profile/avatar', formData, {
+        axios.post('profile/avatar', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           }
@@ -122,7 +122,7 @@ export default {
         this.$store.dispatch("sendError", "Tous les champs sont requis.");
       }else {
         //ENVOIE DE LA REQUETE AU SERVEUR
-        axios.post("http://localhost:3000/auth/password", {
+        axios.post("auth/password", {
           password: this.password,
           newpassword: this.newpassword,
           confirmpassword: this.confirmpassword
@@ -145,7 +145,7 @@ export default {
         this.$store.dispatch("sendError", "Tous les champs sont requis.");
       else{
         //ENVOIE DE LA REQUETE AU SERVEUR
-        axios.post("http://localhost:3000/auth/unregister", {
+        axios.post("auth/unregister", {
           password: this.$refs.deleteAccount.value,
         }).then(response => {
           this.$store.dispatch("sendSuccess", response.data.message) //REQUETE REUSSITE
