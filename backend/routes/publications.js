@@ -6,8 +6,8 @@ const commentairesController = require("../controller/commentaires");
 const authMiddleware = require("../middleware/auth");
 const multerMiddleware = require("../middleware/multer-config");
 
-router.get("/", publicationsController.getPublications); //Route pour récupérer les publications
-router.get("/:id", publicationsController.getPublicationByID); //Route pour récupérer une publication
+router.get("/", authMiddleware.logged, publicationsController.getPublications); //Route pour récupérer les publications
+router.get("/:id", authMiddleware.logged, publicationsController.getPublicationByID); //Route pour récupérer une publication
 router.get("/:id/like", authMiddleware.logged, publicationsController.getLikesOnPublication); //Route pour ajouter ou supprimer un like sur une publication
 router.get("/author/:user_id", authMiddleware.logged, publicationsController.getPublicationsFromUser); //Route pour récupérer les publications d'un utilisateur
 router.delete("/:id", authMiddleware.logged, authMiddleware.canDelete, publicationsController.deletePublications); //Route pour supprimer une publication

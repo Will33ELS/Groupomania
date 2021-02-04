@@ -23,7 +23,6 @@ exports.signup = (req, res, next) => {
 
 //AUTHENTIFICATION DE L'UTILISATEUR
 exports.signin = (req, res, next) => {
-    console.log(req.body)
     User.findOne({
         where:{
             email: req.body.email
@@ -36,15 +35,15 @@ exports.signin = (req, res, next) => {
                 .then(valid => {
                     if(!valid)
                         return res.status(401).send("Les identifiants sont incorrects.")
+
+                    const refreshToken = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: "3min"});
+                    const accessToken = jwt.sign({userId: user.id}, process.env.SECRET_KEY, {expiresIn: "30min"});
                     // Définition de la clé d'authentification
                     res.status(200).json({
                         userId: user.id,
                         isAdmin: user.isAdmin,
-                        token: jwt.sign(
-                            {userId: user.id},
-                            process.env.SECRET_KEY, //RECUPERATION DE LA CLE DANS LE FICHIER UTILS.JS
-                            {expiresIn: "24h"} //LA CLE N'EST VALIDE QUE 24h
-                        )
+                        token: accessToken,
+                        refreshToken: refreshToken
                     });
                 }).catch((error) => {
                     console.log(error);
@@ -53,6 +52,30 @@ exports.signin = (req, res, next) => {
         }
     }).catch(error => res.status(500).json({ error }));
 };
+
+//RAFRAICHIR LE TOKEN D'ACCES
+exports.refreshToken = (req, res, next) => {
+    const userID = req.body.userId;
+    try{
+        const decodedToken = jwt.verify(req.body.refreshToken, process.env.SECRET_KEY);
+        if(req.body.userId === decodedToken.userId){
+            const newAccessToken = jwt.sign(
+                {userId: userID},
+                process.env.SECRET_KEY,
+                { expiresIn: "30min"}
+            );
+            const newRefreshToken = jwt.sign({ userId: userID }, process.env.SECRET_KEY, { expiresIn: "3min"});
+            res.status(200).json({
+                accessToken: newAccessToken,
+                refreshToken: newRefreshToken
+            })
+        }else{
+            throw 'Invalid user ID'
+        }
+    }catch{
+        res.status(401).json({ error: "Authentification incorrect !" })
+    }
+}
 
 //CHANGEMENT DU MOT DE PASSE
 exports.password = (req, res, next) => {

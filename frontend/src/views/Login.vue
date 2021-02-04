@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '../axios/axios';
 export default {
   name: "Login",
   data() {
@@ -32,7 +32,7 @@ export default {
       if(!this.email || !this.password){
         this.$store.dispatch("sendError", "Tous les champs sont requis.");
       }else{
-        axios.post("http://localhost:3000/auth/login", {
+        axios.post("auth/login", {
           email: this.email,
           password: this.password
         }).then((response) => {
@@ -40,8 +40,22 @@ export default {
           this.$store.dispatch("authLogin", {
             userId: response.data.userId,
             token: response.data.token,
+            refreshToken: response.data.refreshToken,
             isAdmin: response.data.isAdmin
           });
+          const task = setInterval(() => {
+            axios.post("auth/refresh",{
+              userId: this.$store.state.userId,
+              refreshToken: this.$store.state.refreshToken
+            }).then((response) => {
+              this.$store.commit("AUTH_REFRESH", response.data.accessToken, response.data.refreshToken);
+            }).catch(error => {
+              console.log(error)
+              clearInterval(task);
+              this.$store.dispatch("authLogout");
+              window.location = "/";
+            }, 1000 * 60 * 2);
+          })
           this.$store.dispatch("sendSuccess", "Vous êtes connecté !");
         }).catch(error => {
             this.$store.dispatch("sendError", error.response.data);

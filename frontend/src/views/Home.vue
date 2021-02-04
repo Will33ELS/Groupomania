@@ -43,7 +43,7 @@ export default {
     Publication
   },
   beforeCreate() {
-    axios.get("http://localhost:3000/publications/").then(response => {
+    axios.get("publications/").then(response => {
       const data = response.data;
       data.forEach(publication => {
         this.publications.push({
@@ -72,7 +72,7 @@ export default {
         formData.append("message", this.$refs.postContent.value);
         formData.append("file", this.postFile);
         //ENVOIE VERS LE SERVEUR
-        axios.post('http://localhost:3000/publications/create', formData).then(() => {
+        axios.post('publications/create', formData).then(() => {
           window.location = '/';
         }).catch(error => this.$store.dispatch("sendError", error.response.data));
       }
