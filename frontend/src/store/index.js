@@ -8,7 +8,7 @@ export default new Vuex.Store({
     token: localStorage.getItem("user-token"),
     refreshToken: localStorage.getItem("user-refresh-token"),
     userId: Number(localStorage.getItem("user-id")),
-    isAdmin: localStorage.getItem("is-admin"),
+    isAdmin: localStorage.getItem("is-admin") === "true",
     error: null,
     success: null,
   },

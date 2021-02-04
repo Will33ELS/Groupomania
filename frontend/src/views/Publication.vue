@@ -13,7 +13,7 @@
                 </div>
               </router-link>
             </div>
-            <div v-if="this.author.id == this.$store.state.userId || this.$store.state.isAdmin" class="tool">
+            <div v-if="this.author.id === this.$store.state.userId || this.$store.state.isAdmin" class="tool">
               <div class="dropdown">
                 <a href="#" role="button" id="publicationSettings" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fas fa-ellipsis-h"></i>
@@ -76,7 +76,7 @@
           <div class="col-12 my-1">Posté le {{ commentaire.date}}</div>
           <div class="col-12 text-break my-2">{{ commentaire.commentaire }}</div>
           <div class="col-12 my-3">
-            <a href="#commentaire" @click="deleteCommentaire(commentaire.id)" v-if="commentaire.authorId == $store.state.userId || $store.state.isAdmin" class="btn btn-danger mx-1 button">
+            <a href="#commentaire" @click="deleteCommentaire(commentaire.id)" v-if="commentaire.authorId === $store.state.userId || $store.state.isAdmin" class="btn btn-danger mx-1 button">
               <i class="fas fa-trash"></i>
               Supprimer
             </a>
@@ -103,7 +103,7 @@ export default {
         commentaires: []
       },
       author: {
-        id: 0,
+        id: -1,
         name: null,
         avatar: null
       },

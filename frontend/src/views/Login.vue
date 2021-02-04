@@ -41,7 +41,7 @@ export default {
             userId: response.data.userId,
             token: response.data.token,
             refreshToken: response.data.refreshToken,
-            isAdmin: response.data.isAdmin
+            isAdmin: response.data.isAdmin == true
           });
           this.$store.dispatch("sendSuccess", "Vous êtes connecté !");
         }).catch(error => {
