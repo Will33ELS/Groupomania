@@ -62,9 +62,9 @@ exports.refreshToken = (req, res, next) => {
             const newAccessToken = jwt.sign(
                 {userId: userID},
                 process.env.SECRET_KEY,
-                { expiresIn: "30min"}
+                { expiresIn: 1000*60*30 }
             );
-            const newRefreshToken = jwt.sign({ userId: userID }, process.env.SECRET_KEY, { expiresIn: "3min"});
+            const newRefreshToken = jwt.sign({ userId: userID }, process.env.SECRET_KEY, { expiresIn: 1000*60*3});
             res.status(200).json({
                 accessToken: newAccessToken,
                 refreshToken: newRefreshToken
@@ -72,7 +72,7 @@ exports.refreshToken = (req, res, next) => {
         }else{
             throw 'Invalid user ID'
         }
-    }catch{
+    }catch (e){
         res.status(401).json({ error: "Authentification incorrect !" })
     }
 }

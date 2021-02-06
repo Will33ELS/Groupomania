@@ -43,6 +43,10 @@ export default {
             refreshToken: response.data.refreshToken,
             isAdmin: response.data.isAdmin == true
           });
+          this.$store.dispatch("autoRefresh", {
+            userId: response.data.userId,
+            refreshToken: response.data.refreshToken
+          });
           this.$store.dispatch("sendSuccess", "Vous êtes connecté !");
         }).catch(error => {
             this.$store.dispatch("sendError", error.response.data);

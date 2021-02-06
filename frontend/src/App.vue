@@ -89,6 +89,13 @@ export default {
   },
   methods:{
     ...mapActions(['dismissAlert'])
+  },
+  mounted() {
+    if(this.$store.state.token !== null)
+      this.$store.dispatch("autoRefresh",{
+        userId: this.$store.state.userId,
+        refreshToken: this.$store.state.refreshToken
+      })
   }
 };
 </script>

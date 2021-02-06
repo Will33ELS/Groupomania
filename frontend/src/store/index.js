@@ -11,6 +11,7 @@ export default new Vuex.Store({
     isAdmin: localStorage.getItem("is-admin") === "true",
     error: null,
     success: null,
+    refreshTask: null,
   },
   mutations: {
     CHANGE_ERROR(state, error){
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     AUTH_REFRESH(state, accessToken, refreshToken){
       state.token = accessToken;
       state.refreshToken = refreshToken;
+    },
+    REFRESH_TASK(state, refreshTask){
+      state.refreshTask = refreshTask;
     }
   },
   actions: {
@@ -35,8 +39,12 @@ export default new Vuex.Store({
       localStorage.removeItem("user-id"); // Suppression de l'userID dans le stockage
       localStorage.removeItem("user-token") // Suppression du token dans le stockage
       localStorage.removeItem("is-admin") // Suppression da permission administrateur dans le stockage
-      localStorage.removeItem("user-refresh-token");
+      localStorage.removeItem("user-refresh-token"); //Suppression du token de refresh
       context.commit('AUTH_SUCCESS', null, null);
+      if(context.state.refreshTask !== null) {
+        clearInterval(context.state.refreshTask); //Arrêt de la task qui permet de renouveller le token
+        context.commit("REFRESH_TASK", null)
+      }
     },
     authLogin: ({commit}, user) => {
       localStorage.setItem("user-id", user.userId);
@@ -44,6 +52,25 @@ export default new Vuex.Store({
       localStorage.setItem("user-refresh-token", user.refreshToken);
       localStorage.setItem("is-admin", user.isAdmin);
       commit('AUTH_SUCCESS', user.token, user.refreshToken, user.userId);
+    },
+    refreshToken (context, credentials) {
+      Vue.prototype.$http.post("auth/refresh", {
+        userId: credentials.userId,
+        refreshToken: credentials.refreshToken
+      }).then(response => {
+        context.commit("AUTH_REFRESH", response.data.accessToken, response.data.refreshToken);
+        context.dispatch("autoRefresh", {
+          userId: credentials.userId,
+          refreshToken: response.data.refreshToken
+        });
+      }).catch((error) => {
+        console.log(error)
+        context.dispatch("authLogout").then(() => window.location = "/login");
+      })
+    },
+    autoRefresh: (context, credentials) => {
+      const refreshTask = setTimeout(() => context.dispatch("refreshToken", credentials), 2 * 60 * 1000);
+      context.commit("REFRESH_TASK", refreshTask);
     },
     sendError: (context, error) => {
       context.commit("CHANGE_ERROR", error);
