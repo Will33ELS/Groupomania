@@ -14,6 +14,7 @@ axiosInstance.interceptors.request.use((config) => {
 //INTERCEPTION DES REPONSES, SI UNE REPONSE RETOURNE UNE ERREUR 401. DECONNEXION DE L'UTILISATEUR
 axiosInstance.interceptors.response.use((response) => { return response }, (error) =>{
     if(error.response.status === 401){
+        console.log(error);
         store.dispatch("authLogout").then(() => window.location = "/login");
     }
     return Promise.reject(error);

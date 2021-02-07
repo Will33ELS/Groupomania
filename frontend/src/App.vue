@@ -1,24 +1,25 @@
 <template>
   <body>
+  <!-- ALERT DANGER -->
+  <div v-if="error != null" class="position-fixed top-0 end-0" style="z-index: 10">
+    <div class="my-3 alert alert-danger alert-dismissible animate fade show" role="alert">
+      <i class="fas fa-exclamation-circle"></i> {{ error }}
+      <button @click="dismissAlert('danger')" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+  <!-- ALERT SUCCESS -->
+  <div v-if="success != null" class="position-fixed top-0 end-0" style="z-index: 10">
+    <div class="my-3 alert alert-success alert-dismissible animate fade show" role="alert">
+      <i class="fas fa-info-circle"></i> {{ success }}
+      <button @click="dismissAlert('success')" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+
   <header>
     <Navbar/>
     <hr/>
   </header>
   <main>
-    <!-- ALERT DANGER -->
-    <div v-if="error != null" class="row justify-content-center">
-      <div class="col-12 col-md-8 my-3 alert alert-danger alert-dismissible fade show" role="alert">
-        {{ error }}
-        <button @click="dismissAlert('danger')" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    </div>
-    <!-- ALERT SUCCESS -->
-    <div v-if="success != null" class="row justify-content-center">
-      <div class="col-12 col-md-8 my-3 alert alert-success alert-dismissible fade show" role="alert">
-        {{ success }}
-        <button @click="dismissAlert('success')" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    </div>
     <router-view/>
   </main>
   <footer>

@@ -17,12 +17,13 @@
     </div>
     <div class="container my-5">
       <h2 class="mb-4">Votre fil d'actualité</h2>
-      <Publication v-for="publication in publications" :key="publication.id" :publication_id="publication.id" :avatar="publication.avatar" :author_id="publication.author_id" :author="publication.author" :content="publication.content" :attachment="publication.attachment" />
+      <Publication v-for="publication in publications" :key="publication.id" :publication_id="publication.id" :avatar="publication.avatar" :author_id="publication.author_id" :author="publication.author" :content="publication.content" :attachment="publication.attachment"/>
     </div>
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
+
 </style>
 
 <script>
@@ -36,7 +37,7 @@ export default {
   data(){
     return {
       postFile: null,
-      publications: []
+      publications: [],
     }
   },
   components: {
@@ -55,7 +56,7 @@ export default {
           "attachment": publication.attachement
         });
       })
-    }).catch(error => this.$store.dispatch("sendError", error.response.data));
+    });
   },
   methods:{
     handleFileUpload(){
