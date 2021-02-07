@@ -35,18 +35,18 @@
           </a>
         </div>
         <div class="publication-footer-item mx-3">
-          <a href="#" @click="loadingCommentaire" data-bs-toggle="modal" :data-bs-target="'#commentaire-'+this.id">
+          <a href="#" @click="loadingCommentaire" data-bs-toggle="modal" :data-bs-target="'#commentaires-'+this.id">
             <i class="fas fa-comment"></i> Commenter ({{ this.commentaireNumber }})
           </a>
         </div>
       </div>
     </div>
     <!-- Modal permettant d'afficher les commentaires -->
-    <div class="modal fade" :id="'commentaire-'+this.id" tabindex="-1" :aria-labelledby="'commentaireLabel-'+this.id" aria-hidden="true">
+    <div class="modal fade" :id="'commentaires-'+this.id" tabindex="-1" :aria-labelledby="'commentairesLabel-'+this.id" aria-hidden="true">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" :id="'commentaireLabel-'+this.id">Commentaires</h5>
+            <h5 class="modal-title" :id="'commentairesLabel-'+this.id">Commentaires</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -75,7 +75,7 @@
             </div>
             <!-- Fin du message -->
             <!-- Liste des commentaires -->
-            <div v-for="commentaire in commentaires" :key="commentaire.id" v-else class="row p-3 m-3 commentaire">
+            <div v-for="commentaire in commentaires" :id="'commentaire-'+commentaire.id" :key="commentaire.id" v-else class="row p-3 m-3 commentaire">
               <div class="col-12 col-md-3 text-center">
                 <router-link class="commentaire-link" :to="'/profile/'+commentaire.authorId">
                   <img :src="commentaire.authorAvatar == null ? '/images/avatar-defaut.png' : commentaire.authorAvatar" :alt="commentaire.authorName" class="commentaire-avatar"/>
@@ -189,8 +189,10 @@ export default {
       e.preventDefault()
       axios.delete(`commentaire/${commentaire_id}`)
           .then(response => {
-            this.commentaires = this.commentaires.filter(commentaire => commentaire_id !== commentaire.id);
+            const div = document.getElementById("commentaire-"+commentaire_id);
+            div.classList.add("remove");
             this.$store.dispatch("sendSuccess", response.data.message);
+            this.commentaireNumber --;
           })
           .catch(error => this.$store.dispatch("sendError", error.response.data));
     },
@@ -208,6 +210,7 @@ export default {
               this.$refs.commentaire.value = "";
               this.loadingCommentaire();
               this.$store.dispatch("sendSuccess", "Votre commentaire a été posté.");
+              this.commentaireNumber ++;
             })
             .catch(error => this.$store.dispatch("sendError", error.response.data))
       }
@@ -230,12 +233,6 @@ export default {
         .then(response => {
           this.commentaireNumber = response.data.length;
         }).catch(error => this.$store.dispatch("sendError", error.response.data));
-  },
-  mounted() {
-    /*const commentairesModal = document.getElementById(`commentaire-${this.id}`);
-    commentairesModal.addEventListener("hide.bs.modal", function (){
-      this.commentaires = [];
-    });*/
   },
 }
 </script>
@@ -323,5 +320,13 @@ export default {
       text-decoration: underline;
     }
   }
+}
+.remove{
+  height: 0;
+  transition: all 0.5s;
+  overflow: hidden;
+  border: none;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 </style>
