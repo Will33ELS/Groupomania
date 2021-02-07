@@ -86,7 +86,7 @@
                 <div class="col-12 my-1">Posté le {{ commentaire.date}}</div>
                 <div class="col-12 text-break my-2">{{ commentaire.commentaire }}</div>
                 <div class="col-12 my-3">
-                  <a href="#" @click="deleteCommentaire(commentaire.id)" v-if="commentaire.authorId === $store.state.userId || $store.state.isAdmin" class="btn btn-danger mx-1 button">
+                  <a href="#" @click="deleteCommentaire($event, commentaire.id)" v-if="commentaire.authorId === $store.state.userId || $store.state.isAdmin" class="btn btn-danger mx-1 button">
                     <i class="fas fa-trash"></i>
                     Supprimer
                   </a>
@@ -185,7 +185,8 @@ export default {
             document.getElementById(`commentaires-loading-${this.id}`).classList.add("d-none");
           }).catch(error => this.$store.dispatch("sendError", error.response.data));
     },
-    deleteCommentaire: function (commentaire_id){
+    deleteCommentaire: function (e, commentaire_id){
+      e.preventDefault()
       axios.delete(`commentaire/${commentaire_id}`)
           .then(response => {
             this.commentaires = this.commentaires.filter(commentaire => commentaire_id !== commentaire.id);
@@ -204,7 +205,9 @@ export default {
           content: this.$refs.commentaire.value
         })
             .then(() => {
-              window.location.reload();
+              this.$refs.commentaire.value = "";
+              this.loadingCommentaire();
+              this.$store.dispatch("sendSuccess", "Votre commentaire a été posté.");
             })
             .catch(error => this.$store.dispatch("sendError", error.response.data))
       }
