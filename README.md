@@ -13,3 +13,8 @@ npm install
 
 ## Lancement du frontend en production
 npm run build
+
+
+## Compte administrateur par défaut
+Login admin@groupomania.fr
+Password admin

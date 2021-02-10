@@ -58,6 +58,8 @@ export default new Vuex.Store({
         userId: credentials.userId,
         refreshToken: credentials.refreshToken
       }).then(response => {
+        localStorage.setItem("user-token", response.data.accessToken);
+        localStorage.setItem("user-refresh-token", response.data.refreshToken);
         context.commit("AUTH_REFRESH", response.data.accessToken, response.data.refreshToken);
         context.dispatch("autoRefresh", {
           userId: credentials.userId,
@@ -69,7 +71,7 @@ export default new Vuex.Store({
       })
     },
     autoRefresh: (context, credentials) => {
-      const refreshTask = setTimeout(() => context.dispatch("refreshToken", credentials), 2 * 60 * 1000);
+      const refreshTask = setTimeout(() => context.dispatch("refreshToken", credentials),  2 * 60 * 1000);
       context.commit("REFRESH_TASK", refreshTask);
     },
     sendError: (context, error) => {

@@ -59,11 +59,7 @@ exports.refreshToken = (req, res, next) => {
     try{
         const decodedToken = jwt.verify(req.body.refreshToken, process.env.SECRET_KEY);
         if(req.body.userId === decodedToken.userId){
-            const newAccessToken = jwt.sign(
-                {userId: userID},
-                process.env.SECRET_KEY,
-                { expiresIn: 60*10 }
-            );
+            const newAccessToken = jwt.sign({userId: userID}, process.env.SECRET_KEY, {expiresIn: 60*10})
             const newRefreshToken = jwt.sign({ userId: userID }, process.env.SECRET_KEY, { expiresIn: 60*3});
             res.status(200).json({
                 accessToken: newAccessToken,
