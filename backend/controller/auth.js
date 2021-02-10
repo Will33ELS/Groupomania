@@ -78,7 +78,7 @@ exports.refreshToken = (req, res, next) => {
 exports.password = (req, res, next) => {
     User.findOne({
         where:{
-            id: userUtil.getUserID()
+            id: userUtil.getUserID(req)
         }
     }).then(user => {
         bcrypt.compare(req.body.password, user.password)
