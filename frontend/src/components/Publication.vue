@@ -77,10 +77,8 @@
             <!-- Liste des commentaires -->
             <div v-for="commentaire in commentaires" :id="'commentaire-'+commentaire.id" :key="commentaire.id" v-else class="row p-3 m-3 commentaire">
               <div class="col-12 col-md-3 text-center">
-                <router-link class="commentaire-link" :to="'/profile/'+commentaire.authorId">
-                  <img :src="commentaire.authorAvatar == null ? '/images/avatar-defaut.png' : commentaire.authorAvatar" :alt="commentaire.authorName" class="commentaire-avatar"/>
-                  <div class="text-truncate mt-2">{{ commentaire.authorName }}</div>
-                </router-link>
+                <img :src="commentaire.authorAvatar == null ? '/images/avatar-defaut.png' : commentaire.authorAvatar" :alt="commentaire.authorName" class="commentaire-avatar"/>
+                <div class="text-truncate mt-2">{{ commentaire.authorName }}</div>
               </div>
               <div class="col-12 col-md-9 justify-content-center justify-content-md-start text-center text-md-start">
                 <div class="col-12 my-1">Posté le {{ commentaire.date}}</div>
