@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 const userUtil = require("../utils/userUtils");
+const config = require("../config");
 
 //Récupération des données du compte
 exports.myProfile = (req, res, next) => {
@@ -39,7 +40,7 @@ exports.changeAvatar = (req, res, next) => {
         else{
             if(!req.file)
                 res.status(404).send("Aucun fichier renseigné.");
-            user.avatarURL = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`; //ROUTE DE L'IMAGE
+            user.avatarURL = `${req.protocol}://${req.get('host')}/${config.IMAGES_DIR()}/${req.file.filename}`; //ROUTE DE L'IMAGE
             user.save().then(() => res.status(200).json({
                 avatarURL: user.avatarURL,
                 message: "Avatar modifié avec succès !"

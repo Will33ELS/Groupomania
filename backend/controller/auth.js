@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 const userUtil = require("../utils/userUtils");
+const config = require("../config");
 
 //CREATION DE L'UTILISATEUR
 exports.signup = (req, res, next) => {
@@ -36,8 +37,8 @@ exports.signin = (req, res, next) => {
                     if(!valid)
                         return res.status(401).send("Les identifiants sont incorrects.")
 
-                    const refreshToken = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: 60*3});
-                    const accessToken = jwt.sign({userId: user.id}, process.env.SECRET_KEY, {expiresIn: 60*10});
+                    const refreshToken = jwt.sign({ userId: user.id }, config.SECRET_KEY(), { expiresIn: 60*3 });
+                    const accessToken = jwt.sign({userId: user.id}, config.SECRET_KEY(), {expiresIn: 60*10 });
                     // Définition de la clé d'authentification
                     res.status(200).json({
                         userId: user.id,
@@ -57,10 +58,10 @@ exports.signin = (req, res, next) => {
 exports.refreshToken = (req, res, next) => {
     const userID = req.body.userId;
     try{
-        const decodedToken = jwt.verify(req.body.refreshToken, process.env.SECRET_KEY);
+        const decodedToken = jwt.verify(req.body.refreshToken, config.SECRET_KEY());
         if(req.body.userId === decodedToken.userId){
-            const newAccessToken = jwt.sign({userId: userID}, process.env.SECRET_KEY, {expiresIn: 60*10})
-            const newRefreshToken = jwt.sign({ userId: userID }, process.env.SECRET_KEY, { expiresIn: 60*3});
+            const newAccessToken = jwt.sign({userId: userID}, config.SECRET_KEY(), {expiresIn: 60*10})
+            const newRefreshToken = jwt.sign({ userId: userID }, config.SECRET_KEY(), { expiresIn: 60*3});
             res.status(200).json({
                 accessToken: newAccessToken,
                 refreshToken: newRefreshToken

@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const config = require("./config");
 
 const authRoute = require("./routes/auth");
 const profileRoute = require("./routes/profile");
@@ -32,7 +33,7 @@ app.use(bodyParser.json());
 app.use(helmet());
 
 // Accès au répertoire images
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, config.IMAGES_DIR())));
 
 //Routes d'authentification
 app.use("/auth", authRoute);

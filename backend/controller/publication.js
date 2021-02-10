@@ -4,6 +4,7 @@ const { QueryTypes } = require('sequelize');
 const Publication = require("../models/publication");
 const Likes = require("../models/likes");
 const userUtil = require("../utils/userUtils");
+const config = require("../config")
 
 /* RETOURNE LES PUBLICATIONS DANS L'ORDRE DECROISSANT */
 exports.getPublications = (req, res, next) => {
@@ -98,7 +99,7 @@ exports.likePublication = (req, res, next) => {
 exports.createPublication = (req, res, next) => {
     let fileUrl = null;
     if(req.file){ //Aucun fichier n'est renseigné
-        fileUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`; //ROUTE DE L'IMAGE
+        fileUrl = `${req.protocol}://${req.get('host')}/${config.IMAGES_DIR()}/${req.file.filename}`; //ROUTE DE L'IMAGE
     }
     //CREATION DE LA PUBLICATION
     Publication.create({
