@@ -36,8 +36,8 @@ exports.signin = (req, res, next) => {
                     if(!valid)
                         return res.status(401).send("Les identifiants sont incorrects.")
 
-                    const refreshToken = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: 1000*60*3});
-                    const accessToken = jwt.sign({userId: user.id}, process.env.SECRET_KEY, {expiresIn: 1000*60*10});
+                    const refreshToken = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: 60*3});
+                    const accessToken = jwt.sign({userId: user.id}, process.env.SECRET_KEY, {expiresIn: 60*10});
                     // Définition de la clé d'authentification
                     res.status(200).json({
                         userId: user.id,
@@ -62,9 +62,9 @@ exports.refreshToken = (req, res, next) => {
             const newAccessToken = jwt.sign(
                 {userId: userID},
                 process.env.SECRET_KEY,
-                { expiresIn: 1000*60*10 }
+                { expiresIn: 60*10 }
             );
-            const newRefreshToken = jwt.sign({ userId: userID }, process.env.SECRET_KEY, { expiresIn: 1000*60*3});
+            const newRefreshToken = jwt.sign({ userId: userID }, process.env.SECRET_KEY, { expiresIn: 60*3});
             res.status(200).json({
                 accessToken: newAccessToken,
                 refreshToken: newRefreshToken

@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const path = require("path");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 const authRoute = require("./routes/auth");
 const profileRoute = require("./routes/profile");
@@ -16,8 +18,18 @@ app.use((req, res, next) => {
     next();
 });
 
+//RATE LIMITER
+const limiter = rateLimit({
+    windowMs: 5 * 60 * 1000,
+    max: 100
+});
+app.use(limiter);
+
 // BODY-PARSER
 app.use(bodyParser.json());
+
+//HELMET
+app.use(helmet());
 
 // Accès au répertoire images
 app.use("/images", express.static(path.join(__dirname, "images")));
