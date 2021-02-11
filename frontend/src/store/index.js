@@ -36,10 +36,7 @@ export default new Vuex.Store({
   },
   actions: {
     authLogout: (context) => {
-      localStorage.removeItem("user-id"); // Suppression de l'userID dans le stockage
-      localStorage.removeItem("user-token") // Suppression du token dans le stockage
-      localStorage.removeItem("is-admin") // Suppression da permission administrateur dans le stockage
-      localStorage.removeItem("user-refresh-token"); //Suppression du token de refresh
+      localStorage.clear();
       context.commit('AUTH_SUCCESS', null, null);
       if(context.state.refreshTask !== null) {
         clearInterval(context.state.refreshTask); //Arrêt de la task qui permet de renouveller le token
